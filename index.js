@@ -26,6 +26,7 @@ async function run() {
   try {
     
     const volunteerPostCollection = client.db('volunteerSphere').collection('volunteers')
+    const volunteersCollection = client.db('volunteerSphere').collection('dummyVolunteers')
 
     app.post('/', async(req, res) => {
         const volunteersPost = req.body;
@@ -38,7 +39,19 @@ async function run() {
 
       res.send(result)
     })
-   
+
+    //get 6 data used in home
+    app.get('/home', async (req, res) => {
+      const result = await volunteerPostCollection.find().limit(6).sort({ deadline: 1 }).toArray();
+
+        res.json(result);
+    })
+  
+    app.get('/dummyVolunteers', async(req, res) => {
+      const result = await volunteersCollection.find().toArray()
+
+    res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
