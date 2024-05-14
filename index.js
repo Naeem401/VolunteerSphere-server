@@ -49,8 +49,39 @@ async function run() {
       const result = await volunteerPostCollection.findOne(query)
       res.send(result)
     })
-
+    app.get("/needVolunteerPost/:email", async (req, res) => {
+      const result = await volunteerPostCollection.find({ email: req.params.userEmail }).toArray();
+      res.send(result)
+    })
    
+    app.delete('/mypost/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await volunteerPostCollection.deleteOne(query);
+      res.send(result)
+    })
+
+      // Update a volunteer post by ID
+  app.put('/volunteer-post/:id', async (req, res) => {
+    const id = req.params.id;
+    const { thumbnail, title, description, category, location, volunteersNeeded, deadline } = req.body;
+      const result = await volunteerPostCollection.updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            thumbnail,
+            title,
+            description,
+            category,
+            location,
+            volunteersNeeded,
+            deadline
+          }
+        }
+      );
+
+    res.send(result)
+  });
   
     app.get('/dummyVolunteers', async(req, res) => {
       const result = await volunteersCollection.find().toArray()
