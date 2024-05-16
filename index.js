@@ -4,8 +4,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 9000;
-
-// Replace 'http://localhost:5174' with the URL of your frontend application
 const corsOptions = {
   origin: ['http://localhost:5173',
   'http://localhost:5174',
@@ -13,7 +11,7 @@ const corsOptions = {
   'https://volunteersphere-3fe43.web.app'
   ], 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies and other credentials
+  credentials: true, 
 };
 
 app.use(cors(corsOptions));
@@ -63,9 +61,10 @@ async function run() {
     // Get volunteer posts by email
     app.get('/needVolunteerPost/:email', async (req, res) => {
       const email = req.params.email
-      console.log(email)
       const query = { 'organizer.email': email }
+      console.log(query)
       const result = await volunteerPostCollection.find((query)).toArray();
+      console.log(`Query result: ${JSON.stringify(result)}`);
       res.send(result);
     });
 
